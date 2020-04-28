@@ -1,7 +1,7 @@
 import Home from '../../page/Home'
-import FormExample from '../../page/Test'
 import Start from '../../page/Start'
 import { Error404 } from '../../page/Errors'
+import Log from '../../page/Log'
 
 const routes = [
   {
@@ -11,7 +11,11 @@ const routes = [
   },
   {
     path:'/home',
-    component: FormExample,
+    component: Home,
+  },
+  {
+    path:'/log',
+    component: Log
   },
   {
     path: '*',

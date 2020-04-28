@@ -1,34 +1,23 @@
 import React, { useState } from "react";
-import { Form, Button, Col, Container } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { login } from "../utils/auth/authHelperMethods";
-import { useTheme } from "../utils/theme/ThemeProvider";
 import {useHistory} from "react-router-dom"
 
 
 const Login = (props) => {
-  console.log(".???.??.?? ")
   const history = useHistory()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState("");
-  const [validated, setValidated] = useState(false)
-
-  const [themeState] = useState(useTheme());
 
   const handleSubmit = (e) => {
-    console.log('fucking')
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
-    console.log('===>', form.checkValidity())
     if (form.checkValidity()) {
-      const promise1 = new Promise((res, rej) =>
-        login({ email, password, res, rej })
-      );
-      promise1
-        .then((a) => history.push("/home"))
+        login({ email, password })
+        .then((a) => setTimeout(() => history.push("/home"), 1000))
         .catch((e) => new Error("erreur handleSubmit !"));
     }
-    setValidated(true)
   };
 
   const handleChange = (e) => {
@@ -40,13 +29,9 @@ const Login = (props) => {
     }
   };
 
-  const isDarkRefrence = () => {
-    return themeState.dark ? "light" : "dark";
-  };
-
   return (
     <>
-    <Form noValidate validated={validated} onSubmit={(e, a) => handleSubmit(e, a)} as={Container} style={{paddingTop: '25%'}} >
+    <Form noValidate  onSubmit={handleSubmit}  style={{paddingTop: '25%'}} >
         {/* <Form.Row className="justify-content-center" > */}
           <Form.Group
             // as={Col}
@@ -81,7 +66,7 @@ const Login = (props) => {
       {/* </Form.Row> */}
       
       
-      <Button type="submit">
+      <Button type="submit" variant="outline-primary">
         Submit
       </Button>
     </Form>

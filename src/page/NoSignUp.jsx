@@ -1,14 +1,13 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
-import {Button} from 'react-bootstrap'
+import { withAuth } from '../utils/auth/withAuth'
 
-const Contenu = () => {
+const C = () => {
   return (
   <>
-    Pour voir le contenu, il faut être loggué.
-    <Button variant="outline-primary"><Link to={'/home/login'}>Se connecter</Link></Button>{' '}
-    
+    Vous êtes maintenant bien loggué
   </>)
 }
+
+const Contenu = withAuth(C)
 
 export default Contenu

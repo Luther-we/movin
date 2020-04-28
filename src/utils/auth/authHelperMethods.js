@@ -1,41 +1,19 @@
 import decode from "jwt-decode";
+import { postFetch } from '../fetch/fetchMethods'
 
 const domain = "http://localhost:8081/user";
 
-const authFetch = (url, options) => {
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-  if (loggedIn()) {
-    headers["Authorization"] = "Bearer " + getToken();
-  }
 
-  return fetch(url, {
-    headers,
-    ...options,
+export const login = ({ email, password}) => {
+  return postFetch(`${domain}/login`, {email: email, password: password})
+  .then((data) => {
+    _setToken(data.token);
+    return data;
   })
-    .then(_checkStatus)
-    .then((res) => res.json());
-};
-
-export const login = ({ email, password, res, rej }) => {
-  authFetch(`${domain}/login`, {
-    method: "POST",
-    // headers,
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  })
-    .then((data) => {
-      setToken(data.token);
-      res(data);
-    })
-    .catch((e) => {
-      rej(e);
-    });
-};
+  .catch((e) => {
+    throw(e)
+  });
+}
 
 export const logout = () => localStorage.removeItem("id_token");
 
@@ -46,23 +24,23 @@ export const loggedIn = () => {
 };
 
 const isTokenExpired = (token) => {
-  try {
-    const decoded = decode(token);
-    if (decoded.exp > Date.now() / 1000) {
-      return true;
+    try {
+      const decoded = decode(token);
+      if (decoded.exp > Date.now() / 1000) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.log("expired check failed! Line 42: AuthService.js", err);
+      return false;
     }
-    return false;
-  } catch (err) {
-    console.log("expired check failed! Line 42: AuthService.js");
-    return false;
-  }
 };
 
-const getToken = () => localStorage.getItem("id_token");
+export const getToken = () => localStorage.getItem("id_token");
 
-const setToken = (token) => localStorage.setItem("id_token", token);
+export const _setToken = (token) => localStorage.setItem("id_token", token);
 
-const _checkStatus = (res) => {
+export const _checkStatus = (res) => {
   if (res.status >= 200 && res.status < 300) {
     return res;
   } else {

@@ -11,12 +11,11 @@ const withAuth = (AuthComponent) => {
 
         useEffect(() => {
             if (!loggedIn()) {
-                history.replace("/login")
+                history.replace("/log")
             } else {
                 /* Try to get confirmation message from the Auth helper. */
                 try {
                     const confirm = getConfirm();
-                    console.log("confirmation is:", confirm);
                     setConfirm(confirm)
                     setLoaded(true)
                 } catch (err) {
@@ -30,7 +29,6 @@ const withAuth = (AuthComponent) => {
             
                 if (loaded === true) {
                     if (confirm) {
-                        console.log("confirmed!");
                         return (
                             /* component that is currently being wrapper(App.js) */
                             <AuthComponent
@@ -39,7 +37,6 @@ const withAuth = (AuthComponent) => {
                             />
                         );
                     } else {
-                        // console.log("not confirmed!");
                         return null;
                     }
                 } else {
